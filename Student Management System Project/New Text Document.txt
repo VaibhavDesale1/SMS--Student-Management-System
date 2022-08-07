@@ -1,0 +1,31 @@
+	con = None
+	if (not int(add_window_ent_rno.get().isdigit())) or (not int(add_window_ent_marks.get().isdigit())):
+		showerror("Error ", 'Enter something' )
+	elif (int(add_window_ent_marks.get()) < 0 or int(add_window_ent_marks.get()) > 100):
+		showerror("Error ", 'Invalid Marks' )
+		add_window_ent_rno.focus()
+		add_window_ent_marks.delete(0, END)
+	elif (len(add_window_ent_name.get()) < 2) or (not add_window_ent_name.get().isalpha()): 
+		showerror("Error ", 'Alphabets only' )
+	
+	else:
+		try:
+			con = connect('kc.db')
+			cursor = con.cursor()
+			sql = "insert into student values('%d', '%s', '%d')"
+			rno = int(add_window_ent_rno.get())
+			name = add_window_ent_name.get()
+			marks = int(add_window_ent_marks.get())
+			cursor.execute(sql % (rno, name, marks))
+			con.commit()
+			showinfo('Success', 'record added')
+
+			add_window_ent_rno.focus()
+			add_window_ent_rno.delete(0, END)
+			add_window_ent_name.delete(0, END)
+			add_window_ent_marks.delete(0, END)
+		except Exception as e:
+			showerror('Failure', e)
+		finally:
+			if con is not None:
+				con.close()
